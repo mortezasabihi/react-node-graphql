@@ -1,19 +1,15 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { LoggerMiddleware } from './middleware/logger.middleware';
-import { ParamValidationMiddleware } from './middleware/param-validation.middleware';
-import { QueryValidationMiddleware } from './middleware/query-validation.middleware';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -22,6 +18,10 @@ import { QueryValidationMiddleware } from './middleware/query-validation.middlew
       envFilePath: '.env',
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    }),
     MailerModule.forRoot({
       transport: {
         host: process.env.MAIL_HOST,
@@ -47,19 +47,9 @@ import { QueryValidationMiddleware } from './middleware/query-validation.middlew
       ttl: 60,
       limit: 10,
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL })
-      .apply(QueryValidationMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.GET })
-      .apply(ParamValidationMiddleware)
-      .exclude('/api/auth/(.*)', '/api/base/(.*)', '/api/users/profile')
-      .forRoutes({ path: '*/:id', method: RequestMethod.ALL });
-  }
-}
+export class AppModule {}

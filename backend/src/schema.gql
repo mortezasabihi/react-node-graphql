@@ -1,0 +1,65 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  _id: String!
+
+  """User fullname"""
+  name: String!
+
+  """User email"""
+  email: String!
+
+  """User password"""
+  password: String!
+
+  """User role"""
+  role: String!
+
+  """User status"""
+  isActive: Boolean!
+}
+
+type Query {
+  users: [User!]!
+  user(_id: String!): User!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(_id: String!): Boolean!
+}
+
+input CreateUserInput {
+  """User fullname"""
+  name: String!
+
+  """User email"""
+  email: String!
+
+  """User password"""
+  password: String!
+
+  """User status"""
+  isActive: Boolean
+
+  """User role"""
+  role: String
+}
+
+input UpdateUserInput {
+  """User fullname"""
+  name: String
+
+  """User email"""
+  email: String
+
+  """User status"""
+  isActive: Boolean
+
+  """User role"""
+  role: String
+  _id: String!
+}
