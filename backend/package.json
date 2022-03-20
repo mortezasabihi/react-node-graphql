@@ -21,7 +21,6 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs-modules/mailer": "^1.6.1",
     "@nestjs/apollo": "^10.0.7",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.0.0",
@@ -41,7 +40,6 @@
     "helmet": "^5.0.2",
     "mongoose": "^6.2.7",
     "mongoose-aggregate-paginate-v2": "^1.0.6",
-    "nodemailer": "^6.7.2",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
@@ -58,7 +56,6 @@
     "@types/jest": "27.4.1",
     "@types/mongoose-aggregate-paginate-v2": "^1.0.3",
     "@types/node": "^16.0.0",
-    "@types/nodemailer": "^6.4.4",
     "@types/passport-jwt": "^3.0.6",
     "@types/passport-local": "^1.0.34",
     "@types/supertest": "^2.0.11",
