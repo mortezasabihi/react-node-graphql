@@ -29,4 +29,5 @@ const Navbar = () => (
     </Flex>
   </Flex>
 );
+
 export default Navbar;
