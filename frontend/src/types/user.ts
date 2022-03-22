@@ -6,3 +6,10 @@ export type User = {
 };
 
 export type Users = User[];
+
+export type IUser = {
+  name: string;
+  email: string;
+  password: string;
+  role: "admin" | "user";
+};
