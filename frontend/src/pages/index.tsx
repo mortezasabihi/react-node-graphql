@@ -1,32 +1,26 @@
 import type { NextPage, GetServerSideProps } from "next";
-import { gql } from "@apollo/client";
-import client from "src/apollo-client";
+import { useQuery } from "@apollo/client";
+import { initializeApollo, addApolloState } from "src/apollo/apolloClient";
 import { Users } from "src/types/user";
 import UsersTable from "src/components/page/index/UsersTable";
+import { GET_ALL_USERS } from "src/apollo/queries";
 
-const Home: NextPage<{ users: Users }> = ({ users }) => {
-  return <UsersTable list={users} />;
+const Home: NextPage<{ users: Users }> = () => {
+  const { data } = useQuery<{ users: Users }>(GET_ALL_USERS);
+
+  return <UsersTable list={data!.users} />;
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const { data } = await client.query({
-    query: gql`
-      query UsersList {
-        users {
-          _id
-          name
-          email
-          role
-        }
-      }
-    `,
+  const apolloClient = initializeApollo();
+
+  await apolloClient.query({
+    query: GET_ALL_USERS,
   });
 
-  return {
-    props: {
-      users: data.users,
-    },
-  };
+  return addApolloState(apolloClient, {
+    props: {},
+  });
 };
 
 export default Home;
