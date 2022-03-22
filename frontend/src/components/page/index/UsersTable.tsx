@@ -88,7 +88,7 @@ const UsersTable: FC<IProps> = ({ list: users }) => {
               <Td textTransform={"capitalize"}>{user.role}</Td>
               <Td>
                 <ButtonGroup size={"sm"} variant={"outline"}>
-                  <Link href={`/edit/${user._id}`} passHref>
+                  <Link href={`/${user._id}/edit`} passHref>
                     <IconButton
                       as={"a"}
                       aria-label="Edit user"

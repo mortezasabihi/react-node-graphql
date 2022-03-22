@@ -17,25 +17,31 @@ import { IUser } from "src/types/user";
 interface IProps {
   onSubmit: (values: IUser) => void;
   loading: boolean;
+  data?: Omit<IUser, "password">;
 }
 
-const UserForm: FC<IProps> = ({ onSubmit, loading }) => {
-  const validationSchema = object({
+const UserForm: FC<IProps> = ({ onSubmit, loading, data }) => {
+  const validationSchema = object().shape({
     name: string().required("Name is required"),
     email: string().email("Invalid email").required("Email is required"),
-    password: string()
-      .min(8, "Password must be at least 8 characters long")
-      .required("Password is required"),
     role: string().oneOf(["admin", "user"], "Invalid role"),
+    ...(!data
+      ? {
+          password: string()
+            .min(8, "Password must be at least 8 characters long")
+            .required("Password is required"),
+        }
+      : {}),
   });
 
   const formik = useFormik({
     validationSchema,
+    enableReinitialize: true,
     initialValues: {
-      name: "",
-      email: "",
+      name: data ? data.name : "",
+      email: data ? data.email : "",
       password: "",
-      role: "user",
+      role: data ? data.role : "user",
     },
     onSubmit: (values: IUser) => {
       onSubmit(values);
@@ -77,22 +83,24 @@ const UserForm: FC<IProps> = ({ onSubmit, loading }) => {
         </FormControl>
 
         {/* password */}
-        <FormControl
-          isInvalid={
-            (formik.errors.password && formik.touched.password) || undefined
-          }
-        >
-          <FormLabel htmlFor="password">Password</FormLabel>
-          <Input
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            type={"password"}
-            id="password"
-            placeholder="password"
-            autoComplete="off"
-          />
-          <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
-        </FormControl>
+        {!data && (
+          <FormControl
+            isInvalid={
+              (formik.errors.password && formik.touched.password) || undefined
+            }
+          >
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <Input
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              type={"password"}
+              id="password"
+              placeholder="password"
+              autoComplete="off"
+            />
+            <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+          </FormControl>
+        )}
 
         {/* role */}
         <FormControl as="fieldset">
